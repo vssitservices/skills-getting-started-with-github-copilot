@@ -30,20 +30,31 @@ document.addEventListener("DOMContentLoaded", () => {
             <h5>Participants</h5>
             <ul>
               ${details.participants
-                .map(
-                  (participant) => `
+.map((participant) => {
+                  const escapedParticipant = participant.replace(
+                    /[&<>"']/g,
+                    (character) =>
+                      ({
+                        "&": "&amp;",
+                        "<": "&lt;",
+                        ">": "&gt;",
+                        '"': "&quot;",
+                        "'": "&#39;",
+                      })[character]
+                  );
+                  return `
                     <li>
-                      <span>${participant}</span>
+                      <span>${escapedParticipant}</span>
                       <button
                         type="button"
                         class="remove-participant"
                         data-activity="${encodeURIComponent(name)}"
                         data-participant="${encodeURIComponent(participant)}"
-                        aria-label="Remove ${participant}"
+                        aria-label="Remove ${escapedParticipant}"
                         title="Remove participant"
                       >&times;</button>
-                    </li>`
-                )
+                    </li>`;
+                })
                 .join("")}
             </ul>
           </div>
